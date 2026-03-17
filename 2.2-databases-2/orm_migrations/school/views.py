@@ -1,15 +1,10 @@
-from django.views.generic import ListView
 from django.shortcuts import render
-
+from django.shortcuts import redirect
 from .models import Student
 
+def student_list(request):
+    students = Student.objects.prefetch_related('teachers').all()
+    return render(request, 'school/students_list.html', {'students': students})
 
-def students_list(request):
-    template = 'school/students_list.html'
-    context = {}
-
-    # используйте этот параметр для упорядочивания результатов
-    # https://docs.djangoproject.com/en/2.2/ref/models/querysets/#django.db.models.query.QuerySet.order_by
-    ordering = 'group'
-
-    return render(request, template, context)
+def redirect_to_students(request):
+    return redirect('students')  # name='students' из urls.py
